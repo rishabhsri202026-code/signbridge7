@@ -1,43 +1,34 @@
 # SignBridge Connect — signbridge7
 
-SignBridge Connect is a browser-first prototype for exploring Indian Sign Language (ISL) translation with a camera-based interface and a local Python bridge to the Sanket ISL Translator.
+SignBridge Connect is a browser-first ISL translation prototype. The browser records a short clip; a local Python bridge sends it through the Sanket model and returns text.
 
-## Current status
+## Start here (Windows)
 
-**Prototype / integration work in progress — not a verified real-time translator.**
+1. Download this repository using **Code → Download ZIP**, then extract it.
+2. Install **Git for Windows** and **Python 3.11 (64-bit)** if not already installed.
+3. Open the extracted folder. Right-click **SETUP-SIGNBRIDGE.bat** and choose **Run** (or double-click it). The setup downloads the upstream Sanket source, installs Python packages, downloads the model checkpoint, and downloads the required T5/TimeSformer caches. These downloads are large and need internet access and several GB of free disk space.
+4. Wait for setup to finish. Do not close its window if downloads are running.
+5. Double-click **RUN-SIGNBRIDGE.bat**. Keep the Sanket bridge terminal open.
+6. Open the website on the same laptop at `http://localhost:8000`, allow camera access, and click **Start camera**, then **Record 5 seconds & translate**.
+7. If the model status says **Bridge offline** or **Model not loaded**, check the bridge terminal for the actual error. The health endpoint is `http://127.0.0.1:8765/health`.
 
-- The browser interface can request camera access and record a short clip.
-- The optional local bridge is designed to pass recorded clips to an existing Sanket model installation.
-- The pretrained checkpoint, Hugging Face caches, upstream Sanket source, and dataset are not bundled in this repository.
-- Translation output and accuracy must be tested against the actual model before this project is described as working or suitable for communication support.
+### If you already have the Sanket folder
 
-## Repository contents
+The automatic setup creates `sanket-upstream` beside this README. If you already have a working `sanket-upstream` folder, copy it into the repository root first and ensure it contains `Sanket - ISL Translator/architecture.py`, `weights/model_best.pth`, the `.venv` and the required cache folders. Setup will preserve existing checkpoint/cache files.
 
-- `index.html`, `app.js`, `styles.css`: browser interface
-- `manifest.webmanifest`, `sw.js`: installable/offline web shell
-- `model-integration/`: local bridge launch scripts and integration notes
-- `c-baseline/`: earlier C prototype, kept as a separate baseline
+## What is included
 
-## Run the browser prototype (Windows)
+- `index.html`, `app.js`, `styles.css`: camera, clip recording, subtitles, speech and copy controls.
+- `manifest.webmanifest`, `sw.js`: installable web shell.
+- `model-integration/sanket_api.py`: local HTTP bridge using Sanket's actual `process_continuous_video(video_path, frames_per_chunk=8)` and `generate_translation(video_frames, pose_data, tokenizer, max_length=...)` APIs.
+- `model-integration/setup-sanket.ps1`: downloads/install setup for Windows.
+- `model-integration/start-sanket-bridge.ps1`: launches the bridge.
 
-1. Download or clone this repository.
-2. Open the folder in VS Code.
-3. Use Live Server, or run a local static server, then open the local HTTP URL. Camera access usually does not work from a `file://` URL.
-4. Grant the browser camera permission.
+## Honest limitations
 
-## Run with the Sanket model
-
-The bridge expects a separate upstream Sanket installation containing the model source and checkpoint, including `Sanket - ISL Translator/architecture.py`, `extract_features.py`, `gemini_nlp.py`, and `weights/model_best.pth`. The compatible Python environment and Hugging Face caches must also be installed locally.
-
-See [model-integration/README.md](model-integration/README.md) before starting the bridge. A healthy camera is not proof that the translation model has loaded. Check the bridge health endpoint and confirm `model_loaded: true`.
-
-## Important limitations
-
-- The current integration is short-clip translation, not continuous real-time subtitles.
-- The model can make mistakes and is not a certified accessibility or medical communication tool.
-- The local bridge is intended for local testing. A hosted website or phone cannot access a laptop's `127.0.0.1` service; remote deployment requires a secured, reachable backend.
-- Do not commit virtual environments, checkpoints, datasets, API keys, or other secrets.
-
-## License and model/data notices
-
-Check the license of the upstream model, checkpoint, and any dataset before redistributing them. This repository's code license does not override upstream licenses or dataset restrictions.
+- This is **short-clip translation**, not continuous real-time subtitles.
+- The model is not bundled in Git because the checkpoint and caches are large; the setup downloads them separately.
+- The browser UI and bridge code have been connected to the upstream function signatures, but this repository has not been executed end-to-end on your laptop here. Setup success is not proof of correct translation. Test with known examples and inspect errors before presenting it as a working translator.
+- This CPU-based laptop may process clips slowly. Results may be wrong; do not use it as the only channel for critical communication.
+- A hosted website or phone cannot access a laptop's `127.0.0.1` service. Phone/remote use needs a secured backend reachable over the network.
+- Check upstream model and dataset licenses before redistribution. Never commit model weights, datasets, virtual environments, or API keys.
