@@ -42,7 +42,16 @@ def load_model():
     TOKENIZER = AutoTokenizer.from_pretrained(str(tok_path), local_files_only=True)
     MODEL = DualStreamGMTFormer(t5_model_name="t5-base")
     checkpoint = torch.load(str(model_path), map_location=DEVICE)
-    MODEL.load_state_dict(checkpoint.get("model_state_dict", checkpoint), strict=False)
+    state_dict = checkpoint.get("model_state_dict", checkpoint) if isinstance(checkpoint, dict) else checkpoint
+    incompatible = MODEL.load_state_dict(state_dict, strict=False)
+    # strict=False permits harmless upstream extras, but missing model parameters
+    # would mean random/untrained weights and must never be reported as loaded.
+    if incompatible.missing_keys:
+        raise RuntimeError(
+            "Checkpoint is missing " + str(len(incompatible.missing_keys)) +
+            " model parameters; refusing to report the model as loaded. First missing keys: " +
+            ", ".join(incompatible.missing_keys[:8])
+        )
     MODEL.to(DEVICE).eval()
 
 
