@@ -39,12 +39,10 @@ New-Item -ItemType Directory -Force -Path $WeightsDir | Out-Null
 $Checkpoint = Join-Path $WeightsDir "model_best.pth"
 if (-not (Test-Path $Checkpoint)) {
     Write-Host "Downloading Sanket checkpoint from Hugging Face. It is large; keep this window open..." -ForegroundColor Yellow
-    & $Python -m huggingface_hub.commands.huggingface_cli download ayush2635/sanket-isl-translator model_best.pth --local-dir $WeightsDir
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "The legacy Hugging Face CLI command failed; trying the current CLI..."
-        & $Python -m pip install --upgrade "huggingface_hub[cli]"
-        & $Python -m huggingface_hub.commands.huggingface_cli download ayush2635/sanket-isl-translator model_best.pth --local-dir $WeightsDir
-    }
+    & $Python -m pip install --upgrade "huggingface_hub[cli]"
+    if ($LASTEXITCODE -ne 0) { throw "Could not install Hugging Face download CLI." }
+    & $Python -c "from huggingface_hub import hf_hub_download; import shutil,sys; p=hf_hub_download(repo_id='ayush2635/sanket-isl-translator', filename='model_best.pth'); shutil.copy2(p, sys.argv[1])" $Checkpoint
+    if ($LASTEXITCODE -ne 0) { throw "Hugging Face checkpoint download failed." }
     if (-not (Test-Path $Checkpoint)) {
         throw "Checkpoint download did not create $Checkpoint. Check Hugging Face access/network and download model_best.pth manually into that folder."
     }
