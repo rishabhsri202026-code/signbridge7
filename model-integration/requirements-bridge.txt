@@ -1,0 +1,4 @@
+# The upstream Sanket requirements are installed by setup-sanket.ps1.
+# These additional packages are needed by the integration/CSV loader.
+pandas
+huggingface_hub
