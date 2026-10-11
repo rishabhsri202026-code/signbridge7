@@ -10,7 +10,7 @@ SignBridge Connect is a browser-first ISL translation prototype. The browser rec
 4. Wait for setup to finish. Do not close its window if downloads are running.
 5. Double-click **RUN-SIGNBRIDGE.bat**. Keep the Sanket bridge terminal open.
 6. Open the website on the same laptop at `http://localhost:8000`, allow camera access, and click **Start camera**, then **Record 5 seconds & translate**.
-7. If the model status says **Bridge offline** or **Model not loaded**, check the bridge terminal for the actual error. The health endpoint is `http://127.0.0.1:8765/health`.
+7. If the model status says **Bridge offline** or **Model not loaded**, check the bridge terminal for the actual error. The health endpoint is `http://127.0.0.1:8765/health`. You can also run `powershell -ExecutionPolicy Bypass -File .\\model-integration\\test-bridge.ps1` from the repository folder to check that the bridge reports `model_loaded: true`.
 
 ### If you already have the Sanket folder
 
@@ -23,6 +23,8 @@ The automatic setup creates `sanket-upstream` beside this README. If you already
 - `model-integration/sanket_api.py`: local HTTP bridge using Sanket's actual `process_continuous_video(video_path, frames_per_chunk=8)` and `generate_translation(video_frames, pose_data, tokenizer, max_length=...)` APIs.
 - `model-integration/setup-sanket.ps1`: downloads/install setup for Windows.
 - `model-integration/start-sanket-bridge.ps1`: launches the bridge.
+- `model-integration/test-bridge.ps1`: smoke-tests the local bridge health.
+- `model-integration/.env.example`: optional Gemini grammar-polish configuration example; copy it to the upstream Sanket directory as `.env` and add your own key if desired. Do not commit a real key.
 
 ## Honest limitations
 
