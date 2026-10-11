@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101b2d"><meta name="description" content="SignBridge Connect — ISL translation prototype">
+<link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="styles.css">
+<title>SignBridge Connect</title>
+</head>
+<body>
+<header><div class="brand-mark" aria-hidden="true">S</div><div><h1>SignBridge <span>Connect</span></h1><p>ISL translation prototype</p></div><span id="modelStatus" class="status">Checking model…</span></header>
+<main>
+<section class="intro"><p class="eyebrow">ACCESSIBILITY • SIGN LANGUAGE</p><h2>Let your hands<br>be understood.</h2><p>Record a short signing clip and send it to your configured local Sanket model. Camera access alone does not mean the translation model is connected.</p></section>
+<section class="workspace">
+<div class="panel camera-panel"><div class="section-head"><div><p class="eyebrow">01 / CAMERA</p><h2>Camera studio</h2></div><span id="cameraStatus" class="tag">Camera off</span></div>
+<div class="video-wrap"><video id="camera" autoplay muted playsinline></video><div id="cameraPlaceholder" class="placeholder"><span>◎</span><strong>Your camera preview</strong><small>Allow camera permission to begin</small></div><span id="recordingFlag" class="recording hidden">● Recording</span></div>
+<div class="controls"><button id="startCamera" class="secondary">Start camera</button><button id="stopCamera" class="secondary" disabled>Stop</button></div>
+<div class="translate-row"><label for="mode">Translation mode</label><select id="mode"><option value="direct">Direct model output</option><option value="predict">Sentence-assisted output</option></select></div>
+<button id="translate" class="primary" disabled>Record 5 seconds &amp; translate</button><p class="hint">Keep both hands visible, use good lighting, and sign clearly for the full clip.</p>
+</div>
+<div class="panel output-panel"><div class="section-head"><div><p class="eyebrow">02 / SUBTITLES</p><h2>Translation output</h2></div><span class="tag">Clip beta</span></div>
+<p class="output-label">RECOGNIZED OUTPUT</p><div id="output" class="output" aria-live="polite">Your translation will appear here.</div>
+<p class="output-label">RAW MODEL GLOSS</p><div id="rawOutput" class="raw-output">Waiting for a clip…</div>
+<div class="result-actions"><button id="speak" class="secondary" disabled>Speak output</button><button id="copy" class="secondary" disabled>Copy text</button></div>
+<div id="message" class="message" role="status">Checking the local model bridge…</div>
+</div>
+</section>
+<section class="panel info"><p class="eyebrow">IMPORTANT</p><h2>Prototype status</h2><p>This build performs short-clip translation only after a local Sanket bridge and compatible model checkpoint are installed. It is not continuous real-time captioning, may make mistakes, and is not a certified communication aid.</p><p>For local laptop testing, start the bridge and open this site over HTTP. A hosted website or phone cannot reach a laptop's <code>127.0.0.1</code> backend directly.</p></section>
+</main><footer>SignBridge Connect · Prototype, not for high-stakes communication</footer>
+<script src="app.js" defer></script>
+</body></html>
