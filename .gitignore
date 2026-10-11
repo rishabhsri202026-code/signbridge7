@@ -1,0 +1,33 @@
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Model weights, datasets, and local caches
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+Dataset/
+cache/
+huggingface/
+.cache/
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+
+# OS/editor/build output
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+dist/
+build/
